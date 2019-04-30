@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Datajob from '../mockdata/jobs';
+// import Datajob from '../mockdata/jobs';
 
 
 export default class content extends Component {
@@ -24,11 +24,11 @@ export default class content extends Component {
 
 <div class="card w-75">
 <div class="card-body">
-        <p>{postdetail.job_id}</p>
-        <p>{postdetail.company_name}</p>
-        <p>{postdetail.salary}</p>
-        <p>{postdetail.designation}</p>
-        <p>{postdetail.location}</p>
+        <p><b>JOB ID</b>:{postdetail.job_id}</p>
+        <p><b>COMPANY</b>:{postdetail.company_name}</p>
+        <p><b>SALARY</b>:{postdetail.salary}</p>
+        <p><b>DESIGNATION</b>:{postdetail.designation}</p>
+        <p><b>LOCATION</b>:{postdetail.location}</p>
         <button class='btn btn-success'>ApplyJob</button>
         </div>
         

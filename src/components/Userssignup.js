@@ -3,6 +3,7 @@ import Inputcomponent from './inputcomponent';
 import { Errfrm } from './formerrors.js';
 import Buttoncomponent from './buttoncomponent';
 import Header from './header';
+import axios from 'axios';
 
 
 class Userssignup extends React.Component {
@@ -31,12 +32,15 @@ class Userssignup extends React.Component {
       pwd: '',
       email: '',
       mobile: '',
+      // location:'Gurgaon',
+      // user_type:'',
 
       nameflag:false,
       pwdflag:false,
       emailflag:false,
       phoneflag:false,
       Signup_flag: true,
+      // user_typeflag:false,
       SignIn: false,
       Errfrm: { name: '', email: '', pwd: '', mobile: '' }
       
@@ -90,6 +94,7 @@ class Userssignup extends React.Component {
     let phoneflag = this.state.phoneflag;
     let nameflag = this.state.nameflag;
     let pwdflag = this.state.pwdflag;
+    let user_typeflag=this.state.user_typeflag;
     
     switch(name) {
 
@@ -119,7 +124,7 @@ class Userssignup extends React.Component {
         fieldValidationErrors.pwd = pwdflag ? '' : 'ISWEAK';
         break;
       default:
-      return '';
+      break;
 
     }
     this.setState(
@@ -137,6 +142,29 @@ class Userssignup extends React.Component {
     this.setState({ formflag: this.state.nameflag && this.state.phoneflag && this.state.emailflag && this.state.pwdflag });
 
   }
+
+
+  onClickSignUp=(e)=>{
+
+    console.log('helllo');
+    e.preventDefault();
+    axios.post('http://localhost:4200/api/user',{
+      user_name: this.state.name,
+      // user_id: this.state.password,
+      user_email: this.state.email,
+      user_mobile: this.state.mobile,
+      user_pwd:this.state.pwd,
+      // user_type:this.state.user_type
+      
+      
+    })
+    .then((res)=>{
+      console.log(res);
+      return this.props.history.push('/');
+    }
+
+    )
+}
   render() {
     return (
       
@@ -166,7 +194,7 @@ class Userssignup extends React.Component {
 
         
          
-          <div class = "jumbotron" >
+          <div class ="jumbotron" >
             <form>
           <h1>Signup</h1>
           <div >
@@ -178,9 +206,12 @@ class Userssignup extends React.Component {
           <Inputcomponent inputtype={'email'} inputname={'email'} inputplaceholder={'enteremail'} inputvalue={this.state.email} inputchange={this.InputHandler}></Inputcomponent>
           <label>user_mobile</label>
           <Inputcomponent inputtype={'tel'} inputname={'mobile'} inputplaceholder={'entermobile'} inputvalue={this.state.mobile} inputchange={this.InputHandler}></Inputcomponent>
+          <label>user_type</label>
+          <Inputcomponent inputtype={'text'} inputname={'usertype'} inputplaceholder={'enterusertype'} inputvalue={this.state.usertype} inputchange={this.InputHandler}></Inputcomponent>
+
           <label>user_pwd</label>
           <Inputcomponent inputtype={'password'} inputname={'pwd'} inputplaceholder={'enterpassword'} inputvalue={this.state.pwd} inputchange={this.InputHandler}></Inputcomponent><br></br>
-          <Buttoncomponent buttontype={'submit'} buttonname={'Submit'}></Buttoncomponent>
+          <Buttoncomponent buttontype={'submit'} buttonname={'Submit'}  buttonclick={this.onClickSignUp}></Buttoncomponent>
         </form>
         </div>
         

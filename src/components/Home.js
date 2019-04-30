@@ -4,13 +4,15 @@ import Header from './header';
   import Datajob from '../mockdata/jobs';
 import Content from './content';
 import Filter from './filter';
+import axios from 'axios';
 
-
+var currentUser={};
 class Home extends Component{
     constructor(props) {
       super(props);
       this.state={
-        data:Datajob
+        data:Datajob,
+        jobList:[]
       };
     }
 
@@ -19,6 +21,52 @@ class Home extends Component{
         this.setState({
           data: data
         })
+      }
+      componentWillMount(){
+
+        if(localStorage.getItem('currentUser')){
+
+          currentUser=JSON.parse(localStorage.getItem('currentUser'));
+          if(currentUser.role<2)
+          {
+            axios.get('http://localhost:4200/api/jobs'+currentUser.name)
+         
+          .then((res) => 
+          {
+             
+              this.setState({ jobList: res.data }, () => {
+                  console.log(res.data)
+              });
+      
+          })
+          }
+          
+          else{
+
+            axios.get('http://localhost:4200/api/jobs')
+       
+          .then((res) => {
+      
+              this.setState({ jobList: res.data }, () => {
+                
+                  console.log(res.data)
+              });
+      
+          })
+         // }
+        }
+      
+        }else{
+          axios.get('http://localhost:4200/api/jobs')
+       
+          .then((res) => {
+      
+              this.setState({ jobList: res.data }, () => {
+                  console.log(res.data)
+              });
+      
+          })
+        }
       }
 
       render(){

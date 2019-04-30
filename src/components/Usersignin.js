@@ -1,138 +1,172 @@
 import React from 'react';
 import Inputcomponent from './inputcomponent';
-import { Errfrm } from './formerrors.js';
-import Buttoncomponent from './buttoncomponent';
+import { Errfrm} from './formerrors.js';
+// import Buttoncomponent from './buttoncomponent';
 import Header from './header';
+import axios from 'axios';
 
 
 class Usersignin extends React.Component {
 
-  constructor(props) {
+    constructor(props) {
 
-    super(props)
+      super(props)
 
-    this.state = {
-      //initializing state
-    //   name: '',
-    //   email: '',
-    //   mobile: '',
-    //   pwd: '',
-    //   pwdflag: false,
-    //   nameflag: false,
-    //   emailflag: false,
-    //   SignIn: true,
-    //   Signup_flag: false,
-    //   phoneflag: false,
-    //   formflag: false,
-    //   Errfrm: { name: '', email: '',  mobile: '', email: '', pwd: '' } 
+      this.state = {
+        //initializing state
+        //   name: '',
+        //   email: '',
+        //   mobile: '',
+        //   pwd: '',
+        //   pwdflag: false,
+        //   nameflag: false,
+        //   emailflag: false,
+        //   SignIn: true,
+        //   Signup_flag: false,
+        //   phoneflag: false,
+        //   formflag: false,
+        //   Errfrm: { name: '', email: '',  mobile: '', email: '', pwd: '' } 
 
 
-    email: '',
-    pwd: '',
-    Signup_flag: false,
-    SignIn: true,
-    emailflag:false,
-    pwdflag:false,
-    formflag:false,
+        email: '',
+        pwd: '',
+        Signup_flag: false,
+        SignIn: true,
+        emailflag: false,
+        pwdflag: false,
+        formflag: false,
+        userData: '',
+        Errfrm: {
+          email: '',
+          pwd: ''
+        }
 
-    Errfrm: { email: '', pwd: '' }
+      }
 
     }
+    //   Signin = () => {    
+    //     this.setState({
+    //       //setting up SigIn  state
+    //       email: '',
+    //       pwd: '',
+    //       Signup_flag: false,
+    //       SignIn: true,
 
-  }
-//   Signin = () => {    
-//     this.setState({
-//       //setting up SigIn  state
-//       email: '',
-//       pwd: '',
-//       Signup_flag: false,
-//       SignIn: true,
+    //       Errfrm: { email: '', pwd: '' }
 
-//       Errfrm: { email: '', pwd: '' }
+    //     });
+    //   }
+    //   Signup = () => {
+    //     this.setState({
+    //  //setting up signup state
+    //       name: '',
+    //       pwd: '',
+    //       email: '',
+    //       mobile: '',
+    //       Signup_flag: true,
+    //       SignIn: false,
+    //       Errfrm: { name: '', email: '', pwd: '', mobile: '' }
+    //     })
+    //   }
 
-//     });
-//   }
-//   Signup = () => {
-//     this.setState({
-//  //setting up signup state
-//       name: '',
-//       pwd: '',
-//       email: '',
-//       mobile: '',
-//       Signup_flag: true,
-//       SignIn: false,
-//       Errfrm: { name: '', email: '', pwd: '', mobile: '' }
-//     })
-//   }
-
-  InputHandler = (e) => {
+    InputHandler = (e) => {
       //input handeler
-    const name = e.target.name;
-    const value = e.target.value;
-    this.setState(
-      {
-      [e.target.name]: e.target.value
-    },() =>{ 
-      //callback
-      this.Validator(name, value) 
+      const name = e.target.name;
+      const value = e.target.value;
+      this.setState({
+        [e.target.name]: e.target.value
+      }, () => {
+        //callback
+        this.Validator(name, value)
+      });
     }
-    );
-  }
-//handling validation
-  Validator(name, value) 
-  {
-    let fieldValidationErrors = this.state.Errfrm;
-    let emailflag = this.state.emailflag;
-    // let phoneflag = this.state.phoneflag;
-    // let nameflag = this.state.nameflag;
-    let pwdflag = this.state.pwdflag;
+    //handling validation
+    Validator(name, value) {
+      let fieldValidationErrors = this.state.Errfrm;
+      let emailflag = this.state.emailflag;
+      // let phoneflag = this.state.phoneflag;
+      // let nameflag = this.state.nameflag;
+      let pwdflag = this.state.pwdflag;
+
+      switch (name) {
+
+        case 'email':
+          emailflag = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+          //
+          fieldValidationErrors.email = emailflag ? '' : ' INVALID';
+          break;
+        case 'pwd':
+          pwdflag = value.length >= 8 && value.match(/^(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8}$/);
+          fieldValidationErrors.pwd = pwdflag ? '' : 'ISWEAK';
+          //     break;
+          //   case 'name':
+          //     nameflag = value.match(/^[a-zA-Z]+$/);
+          //     fieldValidationErrors.name = nameflag ? '':'ISTOOSHORT';
+          //     break;
+          //   case 'mobile':
+          //     phoneflag = value.length === 10 && value.match(/^[0-9]+$/);;
+          //     fieldValidationErrors.mobile = phoneflag ? '':'NOTVALID.';
+          //     break;
+          //   case 'email':
+          //     emailflag = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+          //     fieldValidationErrors.email = emailflag ? '' : ' ISNOTVALID';
+          //     break;
+          //   case 'pwd':
+          //     pwdflag = (value.length) >= 8 && value.match(/^(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8}$/);
+          //     fieldValidationErrors.pwd = pwdflag ? '' : 'ISWEAK';
+          //     break;
+        default:
+          break;
+
+      }
+      this.setState({
+          Errfrm: fieldValidationErrors,
+          emailflag: emailflag,
+          pwdflag: pwdflag,
+          //   nameflag: nameflag,
+          //   phoneflag: phoneflag
+        },
+        this.validateForm);
+    }
+
+    validateForm() {
+      this.setState({
+        formflag: this.state.emailflag && this.state.pwdflag
+      });
+
+    }
     
-    switch(name) {
 
-      case 'email':
-        emailflag = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-        //
-        fieldValidationErrors.email = emailflag ? '' : ' INVALID';
-        break;
-      case 'pwd':
-        pwdflag = value.length >= 8 && value.match(/^(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8}$/);
-        fieldValidationErrors.pwd = pwdflag ? '' : 'ISWEAK';
-    //     break;
-    //   case 'name':
-    //     nameflag = value.match(/^[a-zA-Z]+$/);
-    //     fieldValidationErrors.name = nameflag ? '':'ISTOOSHORT';
-    //     break;
-    //   case 'mobile':
-    //     phoneflag = value.length === 10 && value.match(/^[0-9]+$/);;
-    //     fieldValidationErrors.mobile = phoneflag ? '':'NOTVALID.';
-    //     break;
-    //   case 'email':
-    //     emailflag = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-    //     fieldValidationErrors.email = emailflag ? '' : ' ISNOTVALID';
-    //     break;
-    //   case 'pwd':
-    //     pwdflag = (value.length) >= 8 && value.match(/^(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8}$/);
-    //     fieldValidationErrors.pwd = pwdflag ? '' : 'ISWEAK';
-    //     break;
-      default:
-      break;
+    componentDidMount() {
+      axios.get('http://localhost:4200/api/users')
+        .then((res) => {
+         
+          this.setState({
+            userData: res.data
+          });
 
+        })
     }
-    this.setState(
-       {
-      Errfrm: fieldValidationErrors,
-      emailflag: emailflag,
-      pwdflag: pwdflag,
-    //   nameflag: nameflag,
-    //   phoneflag: phoneflag
-    },
-     this.validateForm);
-  }
 
-  validateForm() {
-    this.setState({ formflag:  this.state.emailflag && this.state.pwdflag });
+    onClickSignIn = (e) => {
+      console.log()
+      e.preventDefault();
+     
+      this.state.userData.map((ele, ind) => {
+        if (ele.email == this.state.email) {
+          if (ele.phone == this.state.pwd) {
+            localStorage.setItem("currentUser", JSON.stringify(ele))
+            return this.props.history.push('/')
+            
+          } else {
 
-  }
+            return console.log("incorrect password")
+          }
+
+        }
+      })
+    }
+
   render() {
     return (
       <div>
@@ -157,7 +191,8 @@ class Usersignin extends React.Component {
             <Inputcomponent inputtype={'email'} inputname={'email'} inputplaceholder={'enter email'} inputvalue={this.state.email} inputchange={this.InputHandler}></Inputcomponent>
             <label>user_pwd</label>
             <Inputcomponent inputtype={'password'} inputname={'pwd'} inputplaceholder={'enter password'} inputvalue={this.state.pwd} inputchange={this.InputHandler}></Inputcomponent><br></br>
-            <Buttoncomponent buttontype={'submit'} buttonname={'submit'}></Buttoncomponent>
+            {/* <Buttoncomponent buttontype={'submit'} buttonname={'submit'}  buttonclick={'this.onClickSignIn'}></Buttoncomponent> */}
+          <button onClick= {this.onClickSignIn}>submit</button>
           </form>
           </div>
           </div> 
