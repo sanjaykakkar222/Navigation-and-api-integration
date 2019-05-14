@@ -1,13 +1,16 @@
 
 import React, { Component } from 'react';
-import {BrowserRouter,Route} from 'react-router-dom'
+import {Router,Route} from 'react-router-dom'
 // import Header from './components/header';
   import Datajob from './mockdata/jobs';
 // import Content from './components/content';
 // import Filter from './components/filter'
-import Home from './components/Home';
-import Usersignin from './components/Usersignin';
-import Usersignup from './components/Userssignup';
+import {Home} from './redux/Containers/jobcontainer'
+import {Usersignin,Usersignup} from './redux/Containers/usercontainer';
+
+// import Usersignup from './components/Userssignup';
+import Company from './company'
+import {history} from './history'
 
 
 class App extends Component{
@@ -36,14 +39,15 @@ class App extends Component{
            <Filter  name={Datajob} filteredData={this.filteredData}/>
            <Content  name={this.state.data}/> */}
 
-           <BrowserRouter>
+           <Router history={history}>
 
            <Route exact path='/' component={Home}/>
            <Route path='/signin' component={Usersignin}/>
            <Route path='/signup'  component={Usersignup}/>
+           <Route path='/company' component={Company}/>
            
            
-           </BrowserRouter>
+           </Router>
         </div>
      );
   }

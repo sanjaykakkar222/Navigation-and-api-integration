@@ -1,11 +1,11 @@
 import React from 'react';
-import Inputcomponent from './inputcomponent';
+import Inputcomponent from './components/inputcomponent';
 // import { Errfrm } from './formerrors.js';
-import Buttoncomponent from './buttoncomponent';
-import Header from './header';
+import Buttoncomponent from './components/buttoncomponent';
+import Header from './components/header';
 import axios from 'axios';
 
-
+var currentUser;
 class Company extends React.Component {
 
   constructor(props) {
@@ -31,7 +31,7 @@ class Company extends React.Component {
       name: '',
       job_type: '',
       position: '',
-    salary: '',
+    salary:'',
      location:'Gurgaon',
       // user_type:'',
 
@@ -82,7 +82,7 @@ class Company extends React.Component {
       [e.target.name]: e.target.value
     },() =>{ 
       //callback
-      this.Validator(name, value) 
+    //  this.Validator(name, value) 
     }
     );
   }
@@ -142,19 +142,23 @@ class Company extends React.Component {
 //     this.setState({ formflag: this.state.nameflag && this.state.phoneflag && this.state.emailflag && this.state.pwdflag });
 
 //   }
+componentWillMount(){
+ currentUser= JSON.parse(localStorage.getItem('currentUser'))
+
+}
 
 
   onClickSignUp=(e)=>{
 
-    console.log('helllo');
+    console.log(currentUser.user_name);
     e.preventDefault();
-    axios.post('http://localhost:4200/api/user',{
+    axios.post('http://localhost:4200/api/job/' + currentUser.user_name ,{
       name: this.state.name,
       // user_id: this.state.password,
       job_type: this.state.job_type,
       salary: this.state.salary,
       position:this.state.position,
-      location:this.state.location
+      
 
       // user_type:this.state.user_type
       
@@ -205,7 +209,7 @@ class Company extends React.Component {
           <label>name</label>
           <Inputcomponent inputtype={'text'} inputname={'name'} inputplaceholder={'entername'} inputvalue={this.state.name} inputchange={this.InputHandler}></Inputcomponent>
           <label>job_type</label>
-          <Inputcomponent inputtype={'text'} inputname={'jobtype'} inputplaceholder={'enteremail'} inputvalue={this.state.jobtype} inputchange={this.InputHandler}></Inputcomponent>
+          <Inputcomponent inputtype={'text'} inputname={'job_type'} inputplaceholder={'enteremail'} inputvalue={this.state.job_type} inputchange={this.InputHandler}></Inputcomponent>
           <label>position</label>
           <Inputcomponent inputtype={'text'} inputname={'position'} inputplaceholder={'entermobile'} inputvalue={this.state.position} inputchange={this.InputHandler}></Inputcomponent>
           <label>salary</label>

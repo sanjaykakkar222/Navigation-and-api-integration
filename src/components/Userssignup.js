@@ -4,6 +4,7 @@ import { Errfrm } from './formerrors.js';
 import Buttoncomponent from './buttoncomponent';
 import Header from './header';
 import axios from 'axios';
+import {useraction} from '../redux/User/useraction'
 
 
 class Userssignup extends React.Component {
@@ -32,8 +33,9 @@ class Userssignup extends React.Component {
       pwd: '',
       email: '',
       mobile: '',
+      user_type:'',
       // location:'Gurgaon',
-      // user_type:'',
+    // user_type:'',
 
       nameflag:false,
       pwdflag:false,
@@ -82,7 +84,7 @@ class Userssignup extends React.Component {
       [e.target.name]: e.target.value
     },() =>{ 
       //callback
-      this.Validator(name, value) 
+      //this.Validator(name, value) 
     }
     );
   }
@@ -148,22 +150,27 @@ class Userssignup extends React.Component {
 
     console.log('helllo');
     e.preventDefault();
-    axios.post('http://localhost:4200/api/user',{
-      user_name: this.state.name,
-      // user_id: this.state.password,
-      user_email: this.state.email,
-      user_mobile: this.state.mobile,
-      user_pwd:this.state.pwd,
-      // user_type:this.state.user_type
+    // axios.post('http://localhost:4200/api/user',{
+    //   user_type:this.state.user_type,
+    //   user_name: this.state.name,
+    //   // user_id: this.state.password,
+    //   user_email: this.state.email,
+    //   user_mobile: this.state.mobile,
+    //   user_pwd:this.state.pwd,
+     
       
       
-    })
-    .then((res)=>{
-      console.log(res);
-      return this.props.history.push('/');
-    }
+    // })
+    // .then((res)=>{
+    //   console.log(res);
+    //   return this.props.history.push('/');
+    // }
 
-    )
+    // )
+    const {dispatch} = this.props
+    const {user_type,name,email,mobile,pwd}=this.state
+    dispatch(useraction.signup(user_type,name,email,mobile,pwd))
+
 }
   render() {
     return (
@@ -207,7 +214,7 @@ class Userssignup extends React.Component {
           <label>user_mobile</label>
           <Inputcomponent inputtype={'tel'} inputname={'mobile'} inputplaceholder={'entermobile'} inputvalue={this.state.mobile} inputchange={this.InputHandler}></Inputcomponent>
           <label>user_type</label>
-          <Inputcomponent inputtype={'text'} inputname={'usertype'} inputplaceholder={'enterusertype'} inputvalue={this.state.usertype} inputchange={this.InputHandler}></Inputcomponent>
+          <Inputcomponent inputtype={'text'} inputname={'user_type'} inputplaceholder={'enterusertype'} inputvalue={this.state.user_type} inputchange={this.InputHandler}></Inputcomponent>
 
           <label>user_pwd</label>
           <Inputcomponent inputtype={'password'} inputname={'pwd'} inputplaceholder={'enterpassword'} inputvalue={this.state.pwd} inputchange={this.InputHandler}></Inputcomponent><br></br>

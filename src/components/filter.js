@@ -31,17 +31,17 @@ export default class filter extends Component {
     {   
         e.preventDefault()
         let filteredData = []
-        let actualData = this.props.name;
+        let actualData = this.props.data;
         console.log('hello on click');
 
         
         if(this.state.companyName || this.state.location||this.state.designation ) {
             //conditions
             actualData.forEach((data,index)=> {
-                if(this.state.companyName === data.company_name) {
+                if(this.state.companyName === data.name) {
                     filteredData.push(data)
                 }
-                if(this.state.designation === data.designation)
+                if(this.state.designation === data.position)
                 {
                     filteredData.push(data)
                 }
@@ -53,11 +53,10 @@ export default class filter extends Component {
                 }
             })
 
-
+            console.log(filteredData)
             console.log(actualData)
-
-            this.props.filteredData(filteredData)
         }
+        this.props.filteredData(filteredData)
 
     }
  

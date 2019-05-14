@@ -31,7 +31,7 @@
 //         [e.target.name]: e.target.value
 //       },() =>{ 
 //         //callback
-//         this.Validator(name, value) 
+//      //   this.Validator(name, value) 
 //       }
 //       );
 //     }

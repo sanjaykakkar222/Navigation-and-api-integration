@@ -21,7 +21,7 @@ export default class header extends Component {
   <a href="#default" class="logo">JOBHUNTER</a>
   <div class="header-right">
   {
-  localStorage.getItem('currentUser')?<Link to="/signin"> HI {currentUser.first_name} </Link>:""} 
+  localStorage.getItem('currentUser')?<Link to="/signin"> HI {currentUser.user_name} </Link>:""} 
 
 {/*  
  <Link >{currentUser.first_name}</Link> */}
@@ -29,15 +29,14 @@ export default class header extends Component {
     <Link to='/'>HOME</Link>
     <a href="#contact">Contact</a>
     <a href="#about">About</a>
-    <Link to ='/signin'>Sign In</Link>
-    <Link to ='/signup'>Sign Up</Link>
-
    
-  <Link to="/" ><span onClick = {()=>{localStorage.removeItem('currentUser') }}>Logout</span></Link>
 
-    
-    {/* <a href="#about">Signin</a>
-    <a href="#about">Signout</a> */}
+   {  localStorage.getItem('currentUser')? <Link to="/" ><span onClick = {()=>{localStorage.removeItem('currentUser') }}>Logout</span></Link>: <span><Link to ='/signin'>Sign In</Link>
+   <Link to ='/signup'>Sign Up</Link></span>}
+   {  localStorage.getItem('currentUser')?(currentUser.user_type===2?<Link to='/company'>Add jobs</Link>:""):""}
+
+
+ 
    
 
   </div>

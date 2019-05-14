@@ -1,10 +1,9 @@
 import React from 'react';
 import Inputcomponent from './inputcomponent';
 import { Errfrm} from './formerrors.js';
+import {useraction} from '../redux/User/useraction'
 // import Buttoncomponent from './buttoncomponent';
 import Header from './header';
-import axios from 'axios';
-
 
 class Usersignin extends React.Component {
 
@@ -13,21 +12,7 @@ class Usersignin extends React.Component {
       super(props)
 
       this.state = {
-        //initializing state
-        //   name: '',
-        //   email: '',
-        //   mobile: '',
-        //   pwd: '',
-        //   pwdflag: false,
-        //   nameflag: false,
-        //   emailflag: false,
-        //   SignIn: true,
-        //   Signup_flag: false,
-        //   phoneflag: false,
-        //   formflag: false,
-        //   Errfrm: { name: '', email: '',  mobile: '', email: '', pwd: '' } 
-
-
+        
         email: '',
         pwd: '',
         Signup_flag: false,
@@ -35,7 +20,7 @@ class Usersignin extends React.Component {
         emailflag: false,
         pwdflag: false,
         formflag: false,
-        userData: '',
+        userData: [],
         Errfrm: {
           email: '',
           pwd: ''
@@ -44,31 +29,7 @@ class Usersignin extends React.Component {
       }
 
     }
-    //   Signin = () => {    
-    //     this.setState({
-    //       //setting up SigIn  state
-    //       email: '',
-    //       pwd: '',
-    //       Signup_flag: false,
-    //       SignIn: true,
-
-    //       Errfrm: { email: '', pwd: '' }
-
-    //     });
-    //   }
-    //   Signup = () => {
-    //     this.setState({
-    //  //setting up signup state
-    //       name: '',
-    //       pwd: '',
-    //       email: '',
-    //       mobile: '',
-    //       Signup_flag: true,
-    //       SignIn: false,
-    //       Errfrm: { name: '', email: '', pwd: '', mobile: '' }
-    //     })
-    //   }
-
+   
     InputHandler = (e) => {
       //input handeler
       const name = e.target.name;
@@ -96,25 +57,10 @@ class Usersignin extends React.Component {
           fieldValidationErrors.email = emailflag ? '' : ' INVALID';
           break;
         case 'pwd':
-          pwdflag = value.length >= 8 && value.match(/^(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8}$/);
+         // pwdflag = value.length >= 8 && value.match(/^(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8}$/);
+         pwdflag=true;
           fieldValidationErrors.pwd = pwdflag ? '' : 'ISWEAK';
-          //     break;
-          //   case 'name':
-          //     nameflag = value.match(/^[a-zA-Z]+$/);
-          //     fieldValidationErrors.name = nameflag ? '':'ISTOOSHORT';
-          //     break;
-          //   case 'mobile':
-          //     phoneflag = value.length === 10 && value.match(/^[0-9]+$/);;
-          //     fieldValidationErrors.mobile = phoneflag ? '':'NOTVALID.';
-          //     break;
-          //   case 'email':
-          //     emailflag = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-          //     fieldValidationErrors.email = emailflag ? '' : ' ISNOTVALID';
-          //     break;
-          //   case 'pwd':
-          //     pwdflag = (value.length) >= 8 && value.match(/^(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8}$/);
-          //     fieldValidationErrors.pwd = pwdflag ? '' : 'ISWEAK';
-          //     break;
+          
         default:
           break;
 
@@ -137,34 +83,40 @@ class Usersignin extends React.Component {
     }
     
 
-    componentDidMount() {
-      axios.get('http://localhost:4200/api/users')
-        .then((res) => {
-         
-          this.setState({
-            userData: res.data
-          });
+    // componentDidMount() {
+    //   console.log('hii')
+    //   axios.get('http://localhost:4200/api/users')
+    //     .then((res) => {
+    //      console.log(res);
+    //       this.setState({
+    //         userData: res.data
+    //       });
 
-        })
-    }
+    //     })
+    // }
 
     onClickSignIn = (e) => {
-      console.log()
+      // console.log(this.state.userData)
       e.preventDefault();
      
-      this.state.userData.map((ele, ind) => {
-        if (ele.email == this.state.email) {
-          if (ele.phone == this.state.pwd) {
-            localStorage.setItem("currentUser", JSON.stringify(ele))
-            return this.props.history.push('/')
+      // this.state.userData.map((ele, ind) => {
+      //   if (ele.user_email == this.state.email) {
+      //     if (ele.user_pwd == this.state.pwd) {
+      //       localStorage.setItem("currentUser", JSON.stringify(ele))
+      //       return this.props.history.push('/')
             
-          } else {
+      //     } else {
 
-            return console.log("incorrect password")
-          }
+      //       return console.log("incorrect password")
+      //     }
 
-        }
-      })
+      //   }
+      // })
+      const {dispatch} = this.props
+      const {email,pwd}=this.state
+      dispatch(useraction.signin(email,pwd))
+
+
     }
 
   render() {

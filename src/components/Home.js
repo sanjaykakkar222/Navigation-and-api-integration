@@ -4,90 +4,95 @@ import Header from './header';
   import Datajob from '../mockdata/jobs';
 import Content from './content';
 import Filter from './filter';
+import {fetchjobaction} from '../redux/FetchJobs/fetchjobsaction'
 import axios from 'axios';
 
 var currentUser={};
 class Home extends Component{
+  isLoggedIn = !!JSON.parse(localStorage.getItem('currentUser'));
     constructor(props) {
       super(props);
       this.state={
-        data:Datajob,
-        jobList:[]
+        roleBasedJobs: [],
+        jobList:[],
+        user: JSON.parse(localStorage.getItem('currentUser')),
+        filterJob: []
       };
     }
 
-    filteredData = (data) => {
+    
+
+    filterData = (data) => {
+      try {
+        if (this.state.user.user_type === 2) {
+          this.setState({
+            roleBasedJobs: data
+          })
+        }
+      } catch (error) {
+        console.log(error.message)
+      }
         console.log(data);
         this.setState({
-          data: data
+          jobList: data
         })
       }
-      componentWillMount(){
 
-        if(localStorage.getItem('currentUser')){
+      componentDidMount()
+      {
 
-          currentUser=JSON.parse(localStorage.getItem('currentUser'));
-          if(currentUser.role<2)
-          {
-            axios.get('http://localhost:4200/api/jobs'+currentUser.name)
-         
-          .then((res) => 
-          {
-             
-              this.setState({ jobList: res.data }, () => {
-                  console.log(res.data)
-              });
-      
+        const {dispatch}=this.props
+
+        dispatch(fetchjobaction.fetchJob())
+      }
+
+      componentWillReceiveProps(nextProps)
+      {
+        const {jobs}=nextProps
+        try {
+          const companyJobs = jobs.filter((item)=>{
+            if(item.name === this.state.user.user_name){
+              return true
+            }
+            return false;
           })
-          }
-          
-          else{
-
-            axios.get('http://localhost:4200/api/jobs')
-       
-          .then((res) => {
-      
-              this.setState({ jobList: res.data }, () => {
-                
-                  console.log(res.data)
-              });
-      
+          console.log(companyJobs)
+          this.setState({
+            roleBasedJobs:companyJobs,
+            roleBasedFilter: companyJobs
           })
-         // }
+        } catch (error) {
+          console.log(error.message)
         }
-      
-        }else{
-          axios.get('http://localhost:4200/api/jobs')
-       
-          .then((res) => {
-      
-              this.setState({ jobList: res.data }, () => {
-                  console.log(res.data)
-              });
-      
-          })
-        }
+        this.setState({
+          jobList: jobs,
+          filterJob: jobs
+        })
       }
 
       render(){
+        const {jobs} = this.props
         return(
            <div>
-{/* 
-           <h1>Hello World</h1>
-           <h2>Hello sanjay</h2>
-           <h2>{4+5}</h2> */}
            <Header/>
-           <Filter  name={Datajob} filteredData={this.filteredData}/>
-           <Content  name={this.state.data}/>
-
-   
-              {/* <BrowserRouter>
-   
-              <Route exact path='/' component={Home}/>
-              <Route path='/signin' component={SignIn}/>
-              <Route path='/signup'  component={SignUp}/>
-              
-              </BrowserRouter> */}
+           {
+             !this.isLoggedIn && <Filter data={this.state.filterJob} filteredData={this.filterData}/>
+           }
+           {
+             this.isLoggedIn && this.state.user.user_type === 2 && <Filter data={this.state.roleBasedFilter} filteredData={this.filterData}/>
+           }
+           {
+             this.isLoggedIn && this.state.user.user_type === 1 && <Filter data={this.state.filterJob} filteredData={this.filterData}/>
+           }
+           {
+             jobs && !this.isLoggedIn && <Content  name={this.state.jobList}/>
+           }
+           {
+             jobs && this.isLoggedIn && this.state.user.user_type === 2 && <Content  name={this.state.roleBasedJobs}/>
+           }
+           {
+             jobs && this.isLoggedIn && this.state.user.user_type === 1 && <Content  name={this.state.jobList}/>
+           }
            </div>
         );
      }
